@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { generateEmbeddings } from "@/lib/huggingface/tokenizer";
 import { FormEvent, useEffect, useState } from "react";
 
