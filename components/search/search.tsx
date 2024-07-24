@@ -46,7 +46,12 @@ export const SearchComponent = () => {
                     />
                 </label>
             </form>
-            {searchResults && <SearchResultCards {...searchResults} />}
+            {searchResults && (
+                <>
+                    <h3 className={styles.semanticDescription}>Some results that may be semantically close to your search query may include: </h3>
+                    <SearchResultCards {...searchResults} />
+                </>
+            )}
         </>
     )
 
