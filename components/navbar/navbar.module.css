@@ -1,0 +1,8 @@
+.navWrapper {
+    display: flex;
+    flex-direction: row;
+    list-style-type: none;
+    gap: 2rem;
+    margin-inline: 0;
+    padding-inline: 0;
+}

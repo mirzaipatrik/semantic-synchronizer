@@ -1,6 +1,6 @@
 import { generateEmbeddings } from "@/lib/huggingface/tokenizer";
 import styles from "./page.module.css";
-import { query } from "@/lib/pinecone/pineconeUtils";
+import { embeddingQuery } from "@/lib/pinecone/pineconeUtils";
 import { performDatoCmsRequest } from "@/lib/datocms/datocms";
 import { Story } from "@/common/types";
 import { chunkText } from "@/utils/storyParser";
@@ -25,8 +25,8 @@ export default async function Home() {
   const { data: { allStories } } = await performDatoCmsRequest({ query: PAGE_CONTENT_QUERY });
   // upsertData(allStories as Story[]);
 
-  const embedding = await generateEmbeddings("Bad view on bahais");
-  const searchResult = await query(embedding);
+  const embedding = await generateEmbeddings("natural disaster");
+  const searchResult = await embeddingQuery(embedding);
   return (
     <main className={styles.main}>
       <div>

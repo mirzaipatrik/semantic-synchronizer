@@ -30,7 +30,7 @@ export const createPineconeIndex = async () => {
     });
 }
 
-interface MetaData {
+export interface MetaData {
     [key: string]: any;
     storyDate: string;
     storyTitle: string;
@@ -66,7 +66,7 @@ export const upsertData = async (allStories: Story[]) => {
                 }
             });
         });
-        
+
     }
 
     // Upsert the partitioned data to the Pinecone index with namespace "BWNS-Stories"
@@ -75,17 +75,28 @@ export const upsertData = async (allStories: Story[]) => {
     );
 }
 
-export const query = async (vector: number[]) => {
+export const embeddingQuery = async (vector: number[]) => {
     const pc = initiatePC();
     const index = pc.index(indexName);
 
-    const queryResponse = await index.namespace("BWNS-Stories").query({
-        topK: 3,
-        vector: vector,
-        includeValues: true,
-        includeMetadata: true,
-    });
+    if (!index) {
+        throw ("no index exists")
+    }
 
-    console.log(queryResponse);
-    return queryResponse;
+    try {
+        const queryResponse = await index.namespace("BWNS-Stories").query({
+            topK: 3,
+            vector: vector,
+            includeValues: true,
+            includeMetadata: true,
+        });
+
+        console.log(queryResponse);
+        return queryResponse;
+
+    } catch (error) {
+        console.error(error)
+    }
+
+
 }
