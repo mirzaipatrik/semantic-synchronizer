@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const hfToken = process.env.NEXT_PUBLIC_HF_TOKEN;
-const embeddingUrl = process.env.NEXT_PUBLIC_EMBEDDING_MODEL_URL;
+const hfToken = process.env.HF_TOKEN;
+const embeddingUrl = process.env.EMBEDDING_MODEL_URL;
 
 export const generateEmbeddings = async (text: string) => {
     if (!hfToken || !embeddingUrl) {
-        throw new Error('Invalid/Missing environment variables: "NEXT_PUBLIC_HF_TOKEN" or "NEXT_PUBLIC_EMBEDDING_MODEL_URL"');
+        throw new Error('Invalid/Missing environment variables: "HF_TOKEN" or "EMBEDDING_MODEL_URL"');
     }
 
     try {
