@@ -1,3 +1,5 @@
+import { MetaData } from "@/lib/pinecone/pineconeUtils";
+
 type StoryContent =
   | ParagraphRecord
   | InlineVideoRecord
@@ -11,3 +13,11 @@ export type Story = {
   description: string;
   storyContent: StoryContent[]; // Array of content items
 };
+
+export interface SearchResults {
+  matches: {
+      id: string;
+      metadata: MetaData;
+      score: number;
+  }[];
+}
