@@ -28,13 +28,9 @@ export const SearchComponent = () => {
         searchQuery && fetchData();
     }, [searchQuery]);
 
-
-
-    console.log(searchResults)
-
     return (
         <>
-            <form onSubmit={(e) => { e.preventDefault(); searchInputRef.current && setSearchQuery(searchInputRef.current.value); console.log(searchQuery); }}>
+            <form onSubmit={(e) => { e.preventDefault(); searchInputRef.current && setSearchQuery(searchInputRef.current.value); }}>
                 <label>
                     <input
                         className={styles.input}

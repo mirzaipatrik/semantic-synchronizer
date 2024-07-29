@@ -14,7 +14,7 @@ const initiatePC = () => {
 
 }
 
-const indexName = "docs-quickstart-index"
+const indexName = "bwns-stories"
 export const createPineconeIndex = async () => {
     const pc = initiatePC();
     await pc.createIndex({
@@ -44,30 +44,24 @@ interface PartitionedData {
     metadata: MetaData
 }
 
-export const upsertData = async (allStories: Story[]) => {
+export const upsertData = async (story: Story) => {
     const pc = initiatePC();
     const index = pc.index(indexName);
-    const partitionedData: PartitionedData[] = [];
-    for (const story of allStories) {
-        const chunkedText = chunkText(getDocumentText(story));
-        const embeddings = await convertStoryChunksIntoEmbeddings(chunkedText);
+    const chunkedText = chunkText(getDocumentText(story));
+    const embeddings = await convertStoryChunksIntoEmbeddings(chunkedText);
 
-        // Map through the embeddings and push them to the partitionedData array together with the metadata
-        // The metadata will be used later on to retrieve the story information and show the chunked text as search results
-        embeddings.map((embedding, index) => {
-            partitionedData.push({
-                id: `${story.storyNumber}-${index}`,
-                values: embedding,
-                metadata: {
-                    storyDate: story.date,
-                    storyTitle: story.description,
-                    chunkedText: chunkedText[index],
-                    storyNumber: story.storyNumber,
-                }
-            });
-        });
-
-    }
+    // Map through the embeddings and push them to the partitionedData array together with the metadata
+    // The metadata will be used later on to retrieve the story information and show the chunked text as search results
+    const partitionedData: PartitionedData[] = embeddings.map((embedding, index) => ({
+        id: `${story.storyNumber}-${index}`,
+        values: embedding,
+        metadata: {
+            storyDate: story.date,
+            storyTitle: story.description,
+            chunkedText: chunkedText[index],
+            storyNumber: story.storyNumber,
+        }
+    }));
 
     // Upsert the partitioned data to the Pinecone index with namespace "BWNS-Stories"
     await index.namespace(`BWNS-Stories`).upsert(
@@ -85,13 +79,12 @@ export const embeddingQuery = async (vector: number[]) => {
 
     try {
         const queryResponse = await index.namespace("BWNS-Stories").query({
-            topK: 3,
+            topK: 10,
             vector: vector,
             includeValues: true,
             includeMetadata: true,
         });
 
-        console.log(queryResponse);
         return queryResponse;
 
     } catch (error) {

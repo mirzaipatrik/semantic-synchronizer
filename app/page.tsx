@@ -1,14 +1,14 @@
 import { generateEmbeddings } from "@/lib/huggingface/tokenizer";
 import styles from "./page.module.css";
-import { embeddingQuery } from "@/lib/pinecone/pineconeUtils";
+import { embeddingQuery, upsertData } from "@/lib/pinecone/pineconeUtils";
 import { performDatoCmsRequest } from "@/lib/datocms/datocms";
-import { Story } from "@/common/types";
+import { Story, StoryContent } from "@/common/types";
 import { chunkText } from "@/utils/storyParser";
 import { getDocumentText } from "@/utils/getDocumentText";
 
 const PAGE_CONTENT_QUERY = `
-  query Home {
-    allStories(filter: {date: {gt: "2022-01-01"}}, locale: en) {
+  query Home($language: SiteLocale, $skip: IntType) {
+    allStories(locale: $language, first: 20, skip: $skip, filter: {date: {gt: "2022-01-01"}}) {
     storyNumber
     date
     description
@@ -21,12 +21,47 @@ const PAGE_CONTENT_QUERY = `
   }
   }`;
 
-export default async function Home() {
-  const { data: { allStories } } = await performDatoCmsRequest({ query: PAGE_CONTENT_QUERY });
-  // upsertData(allStories as Story[]);
 
-  const embedding = await generateEmbeddings("natural disaster");
-  const searchResult = await embeddingQuery(embedding);
+async function getData() {
+  const allStories = [];
+  let skip = 0;
+  let moreStories = true;
+
+  while (moreStories) {
+    const response = await performDatoCmsRequest({ query: PAGE_CONTENT_QUERY, variables: { locale: "en", skip } });
+
+    if (!response || !response.data || !response.data.allStories) {
+      console.error("Unexpected response structure:", response);
+      return null;
+    }
+
+    const { data: { allStories: fetchedStories } } = response;
+    allStories.push(...fetchedStories);
+
+    // Check if more stories are available
+    if (fetchedStories.length < 20) {
+      moreStories = false;
+    } else {
+      skip += 20;
+    }
+  }
+  return allStories;
+}
+
+export default async function Home() {
+
+  const allStories: Story[] = await getData() ?? [];
+  let count = 0;
+
+  // for (const story of allStories) {
+  //   await upsertData(story);
+  //   console.log(`${++count} out of ${allStories.length} indexed`)
+  // }
+
+
+
+  // const embedding = await generateEmbeddings("natural disaster");
+  // const searchResult = await embeddingQuery(embedding);
   return (
     <main className={styles.main}>
       <div>
