@@ -2,33 +2,43 @@ import { generateEmbeddings } from "@/lib/huggingface/tokenizer";
 import styles from "./page.module.css";
 import { embeddingQuery, upsertData } from "@/lib/pinecone/pineconeUtils";
 import { performDatoCmsRequest } from "@/lib/datocms/datocms";
-import { Story, StoryContent } from "@/common/types";
+import { Story } from "@/common/types";
 import { chunkText } from "@/utils/storyParser";
 import { getDocumentText } from "@/utils/getDocumentText";
+import { useEffect } from "react";
+import { StoryContent } from "@/components/home/StoryContent";
 
-const PAGE_CONTENT_QUERY = `
-  query Home($language: SiteLocale, $skip: IntType) {
-    allStories(locale: $language, first: 20, skip: $skip, filter: {date: {gt: "2022-01-01"}}) {
-    storyNumber
-    date
-    description
-    storyContent {
-      __typename
-      ... on ParagraphRecord {
-        paragraphText
+async function getData(year: number) {
+
+  const PAGE_CONTENT_QUERY = `
+  query Home($language: SiteLocale, $skip: IntType, $yearStart: Date, $yearEnd: Date) {
+    allStories(locale: $language, first: 20, skip: $skip, filter: {date: {gt: $yearStart, lt: $yearEnd}},orderBy: date_DESC) {
+      storyNumber
+      date
+      description
+      storyContent {
+        __typename
+        ... on ParagraphRecord {
+          paragraphText
+        }
       }
     }
-  }
   }`;
 
-
-async function getData() {
   const allStories = [];
   let skip = 0;
   let moreStories = true;
 
   while (moreStories) {
-    const response = await performDatoCmsRequest({ query: PAGE_CONTENT_QUERY, variables: { locale: "en", skip } });
+    const response = await performDatoCmsRequest({
+      query: PAGE_CONTENT_QUERY,
+      variables: {
+        language: "en",
+        skip,
+        yearStart: `${year}-01-01`,
+        yearEnd: `${year}-12-31`
+      }
+    });
 
     if (!response || !response.data || !response.data.allStories) {
       console.error("Unexpected response structure:", response);
@@ -49,9 +59,18 @@ async function getData() {
 }
 
 export default async function Home() {
+  const listOfAvailableYears = [2018, 2019, 2020, 2021, 2022, 2023, 2024];
+  const storiesByYear: { [key: number]: Story[] } = {};
 
-  const allStories: Story[] = await getData() ?? [];
-  let count = 0;
+  for (const year of listOfAvailableYears) {
+    const stories: Story[] = await getData(year) ?? [];
+    storiesByYear[year] = stories;
+  }
+
+
+
+  // const allStories: Story[] = await getData(2024) ?? [];
+  // let count = 0;
 
   // for (const story of allStories) {
   //   await upsertData(story);
@@ -62,24 +81,12 @@ export default async function Home() {
 
   // const embedding = await generateEmbeddings("natural disaster");
   // const searchResult = await embeddingQuery(embedding);
+
   return (
     <main className={styles.main}>
       <div>
         <h1>Story Content</h1>
-        {allStories.length > 0 ? (
-          allStories.map((story: Story, index: number) => (
-            <div key={index}>
-              <h2>{story.description}</h2>
-              <div>
-                {chunkText(getDocumentText(story)).map((chunk, chunkIndex) => (
-                  <p key={chunkIndex}>{chunk}</p>
-                ))}
-              </div>
-            </div>
-          ))
-        ) : (
-          <div>No stories available.</div>
-        )}
+        <StoryContent storiesByYear={storiesByYear} />
       </div>
     </main>
   );

@@ -1,0 +1,13 @@
+.date {
+    color: #0070f3
+}
+
+.year {
+    cursor: pointer;
+}
+
+.selectedYearWrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
