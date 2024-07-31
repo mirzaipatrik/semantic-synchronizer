@@ -1,5 +1,6 @@
 import { PartitionedSearchResults, SearchResults } from "@/common/types"
 import styles from './search.module.css'
+import { Interweave } from "interweave";
 
 export const SearchResultCards = (searchResults: SearchResults) => {
 
@@ -22,10 +23,6 @@ export const SearchResultCards = (searchResults: SearchResults) => {
         }
     });
 
-    const groupedSearchResults = Object.values(uniqueResults)
-
-    console.log(groupedSearchResults)
-
     return (
         <div className={styles.container}>
             {
@@ -34,9 +31,7 @@ export const SearchResultCards = (searchResults: SearchResults) => {
                         <a href={`https://news.bahai.org/story/${result.metadata.storyNumber}/`} className={styles.card} key={index}>
                             <h3 className={styles.title}>{result.metadata.storyTitle}</h3>
                             <p className={styles.date}>{result.metadata.storyDate}</p>
-                            <p>
-                                {result.metadata.chunkedText}
-                            </p>
+                            <Interweave tagName="p" content={result.metadata.chunkedText} />
                         </a>
                     )
                 })

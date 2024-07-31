@@ -6,13 +6,13 @@ import { chunkText } from "@/utils/storyParser";
 import styles from "../../app/page.module.css";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { listOfAvailableYears } from "@/data/constants";
 
 interface StoryContentProps {
   storiesByYear: { [key: number]: Story[] };
 }
 
 export function StoryContent({ storiesByYear }: StoryContentProps) {
-  const listOfAvailableYears = [2018, 2019, 2020, 2021, 2022, 2023, 2024];
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [selectedYear, setSelectedYear] = useState<number>(2024);
