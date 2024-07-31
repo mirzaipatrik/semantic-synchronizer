@@ -46,7 +46,7 @@ export function StoryContent({ storiesByYear }: StoryContentProps) {
     <>
       <div className={styles.selectedYearWrapper}>
         {listOfAvailableYears.map((availableYear, index) => (
-          <a className={styles.year} key={index} onClick={() => handleYearClick(availableYear)}>
+          <a className={availableYear===selectedYear ? styles.yearIsSelected : styles.year} key={index} onClick={() => handleYearClick(availableYear)}>
             {availableYear}
           </a>
         ))}
