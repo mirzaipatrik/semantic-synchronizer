@@ -15,6 +15,7 @@
     border: 1px solid black;
     border-radius: 10px;
     padding: 1rem;
+    background: #f6f5f5;
 }
 
 .title {
@@ -30,4 +31,32 @@
     height: 2rem;
     padding: 1rem;
     font-size: 1.1rem;
+    background: rgb(240, 240, 240);
+    box-sizing: border-box;
+    border: 3px solid #ccc;
+    border-radius: 10px;
+}
+
+.year {
+    cursor: pointer;
+}
+
+.yearIsSelected {
+    background: #0070f3;
+    color: white;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.selectedYearWrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.searchBodyWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }

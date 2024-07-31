@@ -1,4 +1,4 @@
-import { PartitionedSearchResults, Story } from '@/common/types';
+import { Story } from '@/common/types';
 import { convertStoryChunksIntoEmbeddings } from '@/utils/embeddingsGenerator';
 import { getDocumentText } from '@/utils/getDocumentText';
 import { chunkText } from '@/utils/storyParser';
