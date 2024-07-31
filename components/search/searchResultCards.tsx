@@ -1,6 +1,5 @@
 import { PartitionedSearchResults, SearchResults } from "@/common/types"
 import styles from './search.module.css'
-import { Interweave } from "interweave";
 
 export const SearchResultCards = (searchResults: SearchResults) => {
 
@@ -36,7 +35,7 @@ export const SearchResultCards = (searchResults: SearchResults) => {
                             <h3 className={styles.title}>{result.metadata.storyTitle}</h3>
                             <p className={styles.date}>{result.metadata.storyDate}</p>
                             <p>
-                                <Interweave content={result.metadata.chunkedText} tagName="p" />
+                                {result.metadata.chunkedText}
                             </p>
                         </a>
                     )

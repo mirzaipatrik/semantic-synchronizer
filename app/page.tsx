@@ -3,10 +3,8 @@ import styles from "./page.module.css";
 import { embeddingQuery, upsertData } from "@/lib/pinecone/pineconeUtils";
 import { performDatoCmsRequest } from "@/lib/datocms/datocms";
 import { Story } from "@/common/types";
-import { chunkText } from "@/utils/storyParser";
-import { getDocumentText } from "@/utils/getDocumentText";
-import { useEffect } from "react";
 import { StoryContent } from "@/components/home/StoryContent";
+import { Suspense } from 'react'
 
 async function getData(year: number) {
 
@@ -82,7 +80,9 @@ export default async function Home() {
     <main className={styles.main}>
       <div>
         <h1>Story Content</h1>
-        <StoryContent storiesByYear={storiesByYear} />
+        <Suspense>
+          <StoryContent storiesByYear={storiesByYear} />
+        </Suspense>
       </div>
     </main>
   );
