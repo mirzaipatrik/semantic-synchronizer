@@ -1,6 +1,5 @@
 import { PartitionedSearchResults, SearchResults } from "@/common/types"
 import styles from './search.module.css'
-import Link from "next/link"
 import { Interweave } from "interweave";
 
 export const SearchResultCards = (searchResults: SearchResults) => {

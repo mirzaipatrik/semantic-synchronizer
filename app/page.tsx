@@ -67,8 +67,6 @@ export default async function Home() {
     storiesByYear[year] = stories;
   }
 
-
-
   // const allStories: Story[] = await getData(2024) ?? [];
   // let count = 0;
 
@@ -76,8 +74,6 @@ export default async function Home() {
   //   await upsertData(story);
   //   console.log(`${++count} out of ${allStories.length} indexed`)
   // }
-
-
 
   // const embedding = await generateEmbeddings("natural disaster");
   // const searchResult = await embeddingQuery(embedding);
