@@ -1,4 +1,4 @@
-import { Story } from '@/common/types';
+import { PartitionedSearchResults, Story } from '@/common/types';
 import { convertStoryChunksIntoEmbeddings } from '@/utils/embeddingsGenerator';
 import { getDocumentText } from '@/utils/getDocumentText';
 import { chunkText } from '@/utils/storyParser';
@@ -11,7 +11,6 @@ const initiatePC = () => {
     }
     const pc = new Pinecone({ apiKey: apiKey });
     return pc;
-
 }
 
 const indexName = "bwns-stories"
@@ -38,21 +37,13 @@ export interface MetaData {
     chunkedText: string;
 }
 
-interface PartitionedData {
-    id: string;
-    values: number[];
-    metadata: MetaData
-}
-
 export const upsertData = async (story: Story) => {
     const pc = initiatePC();
     const index = pc.index(indexName);
     const chunkedText = chunkText(getDocumentText(story));
     const embeddings = await convertStoryChunksIntoEmbeddings(chunkedText);
 
-    // Map through the embeddings and push them to the partitionedData array together with the metadata
-    // The metadata will be used later on to retrieve the story information and show the chunked text as search results
-    const partitionedData: PartitionedData[] = embeddings.map((embedding, index) => ({
+    const partitionedData = embeddings.map((embedding, index) => ({
         id: `${story.storyNumber}-${index}`,
         values: embedding,
         metadata: {
@@ -63,10 +54,7 @@ export const upsertData = async (story: Story) => {
         }
     }));
 
-    // Upsert the partitioned data to the Pinecone index with namespace "BWNS-Stories"
-    await index.namespace(`BWNS-Stories`).upsert(
-        partitionedData
-    );
+    await index.namespace(`BWNS-Stories`).upsert(partitionedData);
 }
 
 export const embeddingQuery = async (vector: number[]) => {
@@ -74,12 +62,12 @@ export const embeddingQuery = async (vector: number[]) => {
     const index = pc.index(indexName);
 
     if (!index) {
-        throw ("no index exists")
+        throw ("no index exists");
     }
 
     try {
         const queryResponse = await index.namespace("BWNS-Stories").query({
-            topK: 10,
+            topK: 20,
             vector: vector,
             includeValues: true,
             includeMetadata: true,
@@ -88,8 +76,6 @@ export const embeddingQuery = async (vector: number[]) => {
         return queryResponse;
 
     } catch (error) {
-        console.error(error)
+        console.error(error);
     }
-
-
 }

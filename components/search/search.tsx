@@ -1,7 +1,6 @@
 'use client';
 import { useState, useEffect, useRef, RefObject } from "react";
 import { SearchResultCards } from "./searchResultCards";
-import { MetaData } from "@/lib/pinecone/pineconeUtils";
 import { SearchResults } from "@/common/types";
 import styles from './search.module.css'
 
@@ -30,7 +29,10 @@ export const SearchComponent = () => {
 
     return (
         <>
-            <form onSubmit={(e) => { e.preventDefault(); searchInputRef.current && setSearchQuery(searchInputRef.current.value); }}>
+            <form onSubmit={(e) => {
+                e.preventDefault();
+                searchInputRef.current && setSearchQuery(searchInputRef.current.value);
+            }}>
                 <label>
                     <input
                         className={styles.input}

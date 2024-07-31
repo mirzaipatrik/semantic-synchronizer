@@ -21,3 +21,8 @@ export interface SearchResults {
       score: number;
   }[];
 }
+
+export interface PartitionedSearchResults {
+  id: string;
+  metadata: MetaData
+}
