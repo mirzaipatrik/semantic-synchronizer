@@ -22,7 +22,7 @@ export const generateEmbeddings = async (text: string): Promise<number[]> => {
                 { headers: { Authorization: `Bearer ${hfToken}` } }
             );
 
-            return response.data[0] as number[];
+            return response.data as number[];
         } catch (error) {
             const axiosError = error as AxiosError;
             if (axiosError.code === "413") {
