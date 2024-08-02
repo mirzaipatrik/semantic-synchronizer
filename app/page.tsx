@@ -4,7 +4,7 @@ import { embeddingQuery, upsertData } from "@/lib/pinecone/pineconeUtils";
 import { performDatoCmsRequest } from "@/lib/datocms/datocms";
 import { Story } from "@/common/types";
 import { StoryContent } from "@/components/home/StoryContent";
-import { Suspense } from 'react'
+import { Suspense } from 'react';
 
 async function getData(year: number) {
 
@@ -79,7 +79,8 @@ export default async function Home() {
   return (
     <main className={styles.main}>
       <div>
-        <h1>Story Content</h1>
+        <h1>BWNS Semantic Search</h1>
+        <p>Explore our stories by year</p>
         <Suspense>
           <StoryContent storiesByYear={storiesByYear} />
         </Suspense>

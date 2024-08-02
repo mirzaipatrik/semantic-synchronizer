@@ -6,7 +6,7 @@ export const SearchResultCards = (searchResults: SearchResults) => {
 
     const uniqueResults: { [key: number]: PartitionedSearchResults } = {};
 
-    searchResults.matches.forEach((match) => {
+    searchResults && searchResults.matches.forEach((match) => {
         const storyNumber = match.metadata.storyNumber;
         if (uniqueResults[storyNumber]) {
             uniqueResults[storyNumber].metadata.chunkedText += `<br /><br />${match.metadata.chunkedText}`;

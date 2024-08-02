@@ -17,3 +17,21 @@
     gap: 1.5rem;
     height: 1rem;
   }
+
+  .loadingWrapper { 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+  }
+
+.loader {
+  width: 50px;
+  bottom: 10vh;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 8px solid rgb(199, 199, 199);
+  border-right-color: #0070f3;
+  animation: l2 1s infinite linear;
+}
+@keyframes l2 {to{transform: rotate(1turn)}}
