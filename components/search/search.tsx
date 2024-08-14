@@ -36,7 +36,6 @@ export const SearchComponent = () => {
     return (
         <>
             <div className={styles.searchBodyWrapper}>
-                {/* <SelectedYear hasResetButton={true} /> */}
                 <form onSubmit={(e) => {
                     e.preventDefault();
                     searchInputRef.current && setSearchQuery(searchInputRef.current.value);
