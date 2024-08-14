@@ -9,7 +9,7 @@ type StoryContent =
 
 export type Story = {
   date: string;
-  storyNumber: number;
+  storyNumber: string;
   description: string;
   storyContent: StoryContent[]; // Array of content items
 };

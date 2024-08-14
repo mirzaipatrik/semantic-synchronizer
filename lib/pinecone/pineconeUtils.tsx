@@ -13,7 +13,7 @@ const initiatePC = () => {
     return pc;
 }
 
-const indexName = "bwns-stories"
+const indexName = "bwns-test"
 export const createPineconeIndex = async () => {
     const pc = initiatePC();
     await pc.createIndex({
@@ -33,7 +33,7 @@ export interface MetaData {
     [key: string]: any;
     storyDate: string;
     storyTitle: string;
-    storyNumber: number;
+    storyNumber: string;
     chunkedText: string;
 }
 
@@ -54,7 +54,7 @@ export const upsertData = async (story: Story) => {
         }
     }));
 
-    await index.namespace(`BWNS-Stories`).upsert(partitionedData);
+    await index.namespace(`bwns-test`).upsert(partitionedData);
 }
 
 export const embeddingQuery = async (vector: number[]) => {
@@ -66,7 +66,7 @@ export const embeddingQuery = async (vector: number[]) => {
     }
 
     try {
-        const queryResponse = await index.namespace("BWNS-Stories").query({
+        const queryResponse = await index.query({
             topK: 20,
             vector: vector,
             includeValues: true,
