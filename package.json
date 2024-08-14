@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@pinecone-database/pinecone": "^3.0.0",
-    "axios": "^1.7.2",
+    "axios": "^1.7.4",
     "interweave": "^13.1.0",
     "next": "14.2.5",
     "react": "^18",
