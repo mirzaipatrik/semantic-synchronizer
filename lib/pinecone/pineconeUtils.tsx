@@ -13,7 +13,7 @@ const initiatePC = () => {
     return pc;
 }
 
-const indexName = "bwns-test"
+const indexName = "bwns-embedding-db"
 export const createPineconeIndex = async () => {
     const pc = initiatePC();
     await pc.createIndex({
@@ -54,7 +54,7 @@ export const upsertData = async (story: Story) => {
         }
     }));
 
-    await index.namespace(`bwns-test`).upsert(partitionedData);
+    await index.upsert(partitionedData);
 }
 
 export const embeddingQuery = async (vector: number[]) => {
