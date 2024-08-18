@@ -5,10 +5,6 @@
     margin-top: 2rem;
 }
 
-.semanticDescription {
-    margin-top: 2rem;
-}
-
 .card {
     color: inherit;
     text-decoration: none;
@@ -41,11 +37,22 @@
     cursor: pointer;
 }
 
+.toggleTitle {
+    padding: 5px;
+}
+
 .yearIsSelected {
+    display: flex;
     background: #0070f3;
     color: white;
     border-radius: 10px;
     padding: 5px;
+}
+
+.toggleButton {
+    padding: 5px;
+    color: #0070f3;
+    cursor: pointer;
 }
 
 .selectedYearWrapper {
@@ -60,3 +67,10 @@
     flex-direction: column;
     gap: 2rem;
 }
+
+.searchDescription {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: row;
+    gap: 0.8rem;
+  }

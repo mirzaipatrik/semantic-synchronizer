@@ -2,7 +2,12 @@ import { PartitionedSearchResults, SearchResults } from "@/common/types"
 import styles from './search.module.css'
 import { Interweave } from "interweave";
 
-export const SearchResultCards = (searchResults: SearchResults) => {
+type SearchResultsProps = {
+    searchResults: SearchResults;
+    relevancyIsSelected: boolean;
+}
+
+export const SearchResultCards = ({ searchResults, relevancyIsSelected }: SearchResultsProps) => {
 
     // We do this in order to preserve that order of the scores
     const uniqueResults: Map<string, PartitionedSearchResults> = new Map();
@@ -25,19 +30,22 @@ export const SearchResultCards = (searchResults: SearchResults) => {
             }
         });
 
+    // Use this for soring by date (descending)
+    const orderedSearchResults = new Map([...uniqueResults.entries()].sort().reverse());
+
     return (
         <div className={styles.container}>
-            {
-                [...uniqueResults.values()].map((result, index) => {
-                    return (
-                        <a href={`https://news.bahai.org/story/${result.metadata.storyNumber}/`} className={styles.card} key={index}>
-                            <h3 className={styles.title}>{result.metadata.storyTitle}</h3>
-                            <p className={styles.date}>{result.metadata.storyDate}</p>
-                            <Interweave tagName="p" content={result.metadata.chunkedText} />
-                        </a>
-                    )
-                })
-            }
+            {[...(relevancyIsSelected ? uniqueResults.values() : orderedSearchResults.values())].map((result, index) => (
+                <a
+                    href={`https://news.bahai.org/story/${result.metadata.storyNumber}/`}
+                    className={styles.card}
+                    key={index}
+                >
+                    <h3 className={styles.title}>{result.metadata.storyTitle}</h3>
+                    <p className={styles.date}>{result.metadata.storyDate}</p>
+                    <Interweave tagName="p" content={result.metadata.chunkedText} />
+                </a>
+            ))}
         </div>
-    )
+    );
 }
