@@ -25,7 +25,7 @@ export function rateLimitMiddleware(req: NextRequest) {
     }
 
     if (ipData.count >= limit) {
-        return NextResponse.json({ msg: `You have reached the rate limit of ${limit} reuests per minute` }, { status: 429 });
+        return NextResponse.json({ msg: `You have reached the rate limit of ${limit} requests per minute` }, { status: 429 });
     }
 
     ipData.count += 1;

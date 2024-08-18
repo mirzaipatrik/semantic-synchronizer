@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef, RefObject } from "react";
+import { useState, useEffect, useRef, RefObject, useContext } from "react";
 import { SearchResultCards } from "./searchResultCards";
 import { SearchResults } from "@/common/types";
 import styles from './search.module.css'
@@ -15,6 +15,22 @@ export const SearchComponent = () => {
     const [searchResults, setSearchResults] = useState<SearchResults | null>(null);
     const searchInputRef: RefObject<HTMLInputElement> = useRef(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [relevanceIsSelected, setRelevanceIsSelected] = useState<boolean>(true);
+    const [dateIsSelected, setDateIsSelected] = useState<boolean>(false);
+
+    const handleRelevance: () => void = () => {
+        !relevanceIsSelected && (
+            setRelevanceIsSelected(true),
+            setDateIsSelected(false)
+        )
+    }
+
+    const handleDate: () => void = () => {
+        !dateIsSelected && (
+            setDateIsSelected(true),
+            setRelevanceIsSelected(false)
+        )
+    }
 
     useEffect(() => {
         if (!searchQuery) return;
@@ -55,8 +71,12 @@ export const SearchComponent = () => {
             {isLoading && <Loading />}
             {!isLoading && searchResults && (
                 <>
-                    <h3 className={styles.semanticDescription}>Some results that may be semantically close to your search query may include: </h3>
-                    <SearchResultCards {...searchResults} />
+                    <div className={styles.searchDescription}>
+                        <p className={styles.toggleTitle}>Order by:</p>
+                        <p onClick={handleRelevance} className={relevanceIsSelected ? styles.yearIsSelected : styles.toggleButton}>Relevance</p>
+                        <p onClick={handleDate} className={dateIsSelected ? styles.yearIsSelected : styles.toggleButton}>Date</p>
+                    </div>
+                    <SearchResultCards searchResults={searchResults} relevancyIsSelected={relevanceIsSelected}/>
                 </>
             )}
         </>
