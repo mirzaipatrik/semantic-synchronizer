@@ -22,7 +22,26 @@ export interface SearchResults {
   }[];
 }
 
+interface ResponsiveImage {
+  src: string;
+  sizes: string;
+  width: number;
+  height: number;
+  alt: string;
+  title: string;
+  base64: string;
+}
+
+export interface MetaData {
+  [key: string]: any;
+  storyDate: string;
+  storyTitle: string;
+  storyNumber: string;
+  chunkedText: string;
+}
+
 export interface PartitionedSearchResults {
   id: string;
   metadata: MetaData
+  responsiveImage: ResponsiveImage;
 }

@@ -13,7 +13,8 @@ const initiatePC = () => {
     return pc;
 }
 
-const indexName = "bwns-embedding-db"
+const indexName = "bwns-db";
+
 export const createPineconeIndex = async () => {
     const pc = initiatePC();
     await pc.createIndex({
@@ -29,13 +30,6 @@ export const createPineconeIndex = async () => {
     });
 }
 
-export interface MetaData {
-    [key: string]: any;
-    storyDate: string;
-    storyTitle: string;
-    storyNumber: string;
-    chunkedText: string;
-}
 
 export const upsertData = async (story: Story) => {
     const pc = initiatePC();
