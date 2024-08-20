@@ -2,6 +2,10 @@ import { PartitionedSearchResults, SearchResults } from "@/common/types"
 import styles from './search.module.css'
 import { Interweave } from "interweave";
 
+import { Image as DatoImage } from "react-datocms";
+import { metadata } from '../../app/search/layout';
+
+
 type SearchResultsProps = {
     searchResults: SearchResults;
     relevancyIsSelected: boolean;
@@ -16,15 +20,29 @@ export const SearchResultCards = ({ searchResults, relevancyIsSelected }: Search
         .forEach((match) => {
             const storyNumber = match.metadata.storyNumber;
             if (uniqueResults.has(storyNumber)) {
-                uniqueResults.get(storyNumber)!.metadata.chunkedText += `<br /><br />${match.metadata.chunkedText}`;
+                uniqueResults.get(storyNumber)!.metadata.chunkedText += `<p>${match.metadata.chunkedText
+                    .replace(match.metadata.description, "")
+                    .replace(match.metadata.title, "")
+                    .trim()
+                    }</p>`;
             } else {
                 uniqueResults.set(storyNumber, {
                     id: match.id,
                     metadata: {
                         storyDate: match.metadata.date,
                         storyTitle: match.metadata.title,
-                        chunkedText: match.metadata.chunkedText,
+                        chunkedText: `<p>${match.metadata.chunkedText.replace(match.metadata.description, "").replace(match.metadata.title, "").trim()}</p>`,
                         storyNumber: match.metadata.storyNumber,
+                        description: match.metadata.description
+                    },
+                    responsiveImage: {
+                        sizes: match.metadata.sizes,
+                        src: match.metadata.src,
+                        width: match.metadata.width,
+                        height: match.metadata.height,
+                        alt: "",
+                        title: "",
+                        base64: match.metadata.base64
                     }
                 })
             }
@@ -32,6 +50,8 @@ export const SearchResultCards = ({ searchResults, relevancyIsSelected }: Search
 
     // Use this for soring by date (descending)
     const orderedSearchResults = new Map([...uniqueResults.entries()].sort().reverse());
+
+    console.log(orderedSearchResults.entries());
 
     return (
         <div className={styles.container}>
@@ -41,9 +61,15 @@ export const SearchResultCards = ({ searchResults, relevancyIsSelected }: Search
                     className={styles.card}
                     key={index}
                 >
-                    <h3 className={styles.title}>{result.metadata.storyTitle}</h3>
-                    <p className={styles.date}>{result.metadata.storyDate}</p>
-                    <Interweave tagName="p" content={result.metadata.chunkedText} />
+                    <div className={styles.resultsIntro}>
+                        <div>
+                            <h3 className={styles.title}>{result.metadata.storyTitle}</h3>
+                            <p className={styles.date}>{result.metadata.storyDate}</p>
+                            <h6 className={styles.descriptionLine}>{result.metadata.description}</h6>
+                        </div>
+                        <DatoImage data={result.responsiveImage} />
+                    </div>
+                    <Interweave className={styles.searchResultParagraph} tagName="div" content={result.metadata.chunkedText} />
                 </a>
             ))}
         </div>

@@ -18,8 +18,27 @@
     color: black;
 }
 
+.descriptionLine {
+   font-size: 1rem;
+   font-weight: 600;
+}
+
+.searchResultParagraph p {
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-inline-start: 3px solid rgb(198, 162, 109);
+    padding-inline-start: 1.2rem;
+}
+
 .date {
     color:#0070f3
+}
+
+.resultsIntro {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    padding-bottom: 1rem;
 }
 
 .input {
