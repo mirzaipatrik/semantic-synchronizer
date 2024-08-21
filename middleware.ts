@@ -7,7 +7,7 @@ const rateLimitMap = new Map();
 export function rateLimitMiddleware(req: NextRequest) {
     // Middleware for preventing a DDoS attack
     const ip = req.headers.get("x-forwarded-for") || req.ip;
-    const limit = 60; // Limiting requests to 100 per minute per IP
+    const limit = 120; // Limiting requests to 120 per minute per IP
     const windowMs = 60 * 1000; // 1 minute
 
     if (!rateLimitMap.has(ip)) {

@@ -67,7 +67,9 @@ export const SearchResultCards = ({ searchResults, relevancyIsSelected }: Search
                             <p className={styles.date}>{result.metadata.storyDate}</p>
                             <h6 className={styles.descriptionLine}>{result.metadata.description}</h6>
                         </div>
-                        <DatoImage data={result.responsiveImage} />
+                        <div className={styles.figureStyles}>
+                            <DatoImage data={result.responsiveImage} />
+                        </div>
                     </div>
                     <Interweave className={styles.searchResultParagraph} tagName="div" content={result.metadata.chunkedText} />
                 </a>
