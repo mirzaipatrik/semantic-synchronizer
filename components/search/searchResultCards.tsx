@@ -70,6 +70,7 @@ export const SearchResultCards = ({ searchResults, relevancyIsSelected }: Search
                         <div className={styles.figureStyles}>
                             <DatoImage data={result.responsiveImage} />
                         </div>
+
                     </div>
                     <Interweave className={styles.searchResultParagraph} tagName="div" content={result.metadata.chunkedText} />
                 </a>
