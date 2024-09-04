@@ -1,17 +1,16 @@
 import { PartitionedSearchResults, SearchResults } from "@/common/types"
 import styles from './search.module.css'
 import { Interweave } from "interweave";
-
 import { Image as DatoImage } from "react-datocms";
-import { metadata } from '../../app/search/layout';
-
+import { FeedbackWrapper } from "./searchAssets";
 
 type SearchResultsProps = {
     searchResults: SearchResults;
     relevancyIsSelected: boolean;
+    searchQuery: string;
 }
 
-export const SearchResultCards = ({ searchResults, relevancyIsSelected }: SearchResultsProps) => {
+export const SearchResultCards = ({ searchResults, relevancyIsSelected, searchQuery }: SearchResultsProps) => {
 
     // We do this in order to preserve that order of the scores
     const uniqueResults: Map<string, PartitionedSearchResults> = new Map();
@@ -19,19 +18,22 @@ export const SearchResultCards = ({ searchResults, relevancyIsSelected }: Search
     searchResults && searchResults.matches
         .forEach((match) => {
             const storyNumber = match.metadata.storyNumber;
+            const cleanedText = match.metadata.chunkedText
+                .replace(match.metadata.description, "")
+                .replace(match.metadata.title, "")
+                .trim();
+
             if (uniqueResults.has(storyNumber)) {
-                uniqueResults.get(storyNumber)!.metadata.chunkedText += `<p>${match.metadata.chunkedText
-                    .replace(match.metadata.description, "")
-                    .replace(match.metadata.title, "")
-                    .trim()
-                    }</p>`;
+                if (cleanedText) {
+                    uniqueResults.get(storyNumber)!.metadata.chunkedText += `<p>${cleanedText}</p>`;
+                }
             } else {
                 uniqueResults.set(storyNumber, {
                     id: match.id,
                     metadata: {
                         storyDate: match.metadata.date,
                         storyTitle: match.metadata.title,
-                        chunkedText: `<p>${match.metadata.chunkedText.replace(match.metadata.description, "").replace(match.metadata.title, "").trim()}</p>`,
+                        chunkedText: cleanedText ? `<p>${cleanedText}</p>` : "",
                         storyNumber: match.metadata.storyNumber,
                         description: match.metadata.description
                     },
@@ -48,16 +50,16 @@ export const SearchResultCards = ({ searchResults, relevancyIsSelected }: Search
             }
         });
 
+
     // Use this for soring by date (descending)
     const orderedSearchResults = new Map([...uniqueResults.entries()].sort().reverse());
-
-    console.log(orderedSearchResults.entries());
 
     return (
         <div className={styles.container}>
             {[...(relevancyIsSelected ? uniqueResults.values() : orderedSearchResults.values())].map((result, index) => (
                 <a
                     href={`https://news.bahai.org/story/${result.metadata.storyNumber}/`}
+                    target="_blank"
                     className={styles.card}
                     key={index}
                 >
@@ -70,9 +72,9 @@ export const SearchResultCards = ({ searchResults, relevancyIsSelected }: Search
                         <div className={styles.figureStyles}>
                             <DatoImage data={result.responsiveImage} />
                         </div>
-
                     </div>
                     <Interweave className={styles.searchResultParagraph} tagName="div" content={result.metadata.chunkedText} />
+                    <FeedbackWrapper storyNumber={result.metadata.storyNumber} searchQuery={searchQuery} searchResult={searchResults} />
                 </a>
             ))}
         </div>
