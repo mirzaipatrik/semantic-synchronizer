@@ -1,6 +1,5 @@
-import { PartitionedSearchResults, SearchResults } from '@/common/types';
+import { SearchResults } from '@/common/types';
 import styles from '../layout.module.css';
-
 
 export const ThumbsUpIcon = () => (
     <div className={styles.iconWrapper}>
@@ -22,9 +21,6 @@ export const ThumbsDownIcon = () => (
     </div>
 )
 
-const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    event.preventDefault();
-};
 
 interface SearchResultProps {
     searchResult: SearchResults;
@@ -32,19 +28,93 @@ interface SearchResultProps {
     storyNumber: string;
 }
 
-const getSearchMatches = () => {}
-
 export const FeedbackWrapper = ({ searchResult, searchQuery, storyNumber }: SearchResultProps) => {
-    console.log({
-        searchResult, searchQuery, storyNumber
-    })
+
+    const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        event.preventDefault();
+
+        // console.log({ searchResult, searchQuery, storyNumber })
+    };
+
+    const increaseScore = async () => {
+        try {
+            searchResult.matches.forEach(val => {
+                if (val.metadata.storyNumber === storyNumber) {
+                    // console.log({
+                    //     searchQuery, 
+                    //     searchResult: val.metadata.chunkedText, 
+                    //     originalScore: val.score, 
+                    //     score: Math.min(val.score + 0.1, 1)
+                    // });
+
+                    // Call API to update the feedback
+                    fetch('/api', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Post-Methood': "increase"
+                        },
+                        body: JSON.stringify({
+                            searchQuery,
+                            searchResult: val.metadata.chunkedText,
+                            storyNumber,
+                            score: val.score,
+                        }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                }
+            });
+        } catch (err) {
+            console.error('Error increasing score:', err);
+        }
+    };
+
+    const decreaseScore = async () => {
+        searchResult.matches.forEach(val => {
+            if (val.metadata.storyNumber === storyNumber) {
+
+                // Call API to update the feedback
+                fetch('/api', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Post-Methood': "decrease"
+                    },
+                    body: JSON.stringify({
+                        searchQuery,
+                        searchResult: val.metadata.chunkedText,
+                        storyNumber,
+                        score: val.score,
+                    }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+        });
+    };
+
+
     return (
         <div
             className={styles.feedbackWrapper}
-            onClick={handleClick}
         >
-            <ThumbsUpIcon />
-            <ThumbsDownIcon />
+            <div onClick={(e) => { handleClick(e); increaseScore(); }}>
+                <ThumbsUpIcon />
+            </div>
+            <div onClick={(e) => { handleClick(e); decreaseScore(); }}>
+                <ThumbsDownIcon />
+            </div>
         </div>
     );
 }
