@@ -33,19 +33,12 @@ export const FeedbackWrapper = ({ searchResult, searchQuery, storyNumber }: Sear
     const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         event.preventDefault();
 
-        // console.log({ searchResult, searchQuery, storyNumber })
     };
 
     const increaseScore = async () => {
         try {
             searchResult.matches.forEach(val => {
                 if (val.metadata.storyNumber === storyNumber) {
-                    // console.log({
-                    //     searchQuery, 
-                    //     searchResult: val.metadata.chunkedText, 
-                    //     originalScore: val.score, 
-                    //     score: Math.min(val.score + 0.1, 1)
-                    // });
 
                     // Call API to update the feedback
                     fetch('/api', {
@@ -62,9 +55,6 @@ export const FeedbackWrapper = ({ searchResult, searchQuery, storyNumber }: Sear
                         }),
                     })
                     .then(response => response.json())
-                    .then(data => {
-                        console.log('Success:', data);
-                    })
                     .catch(error => {
                         console.error('Error:', error);
                     });
@@ -94,9 +84,6 @@ export const FeedbackWrapper = ({ searchResult, searchQuery, storyNumber }: Sear
                     }),
                 })
                     .then(response => response.json())
-                    .then(data => {
-                        console.log('Success:', data);
-                    })
                     .catch(error => {
                         console.error('Error:', error);
                     });

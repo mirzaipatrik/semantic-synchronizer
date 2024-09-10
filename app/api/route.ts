@@ -49,8 +49,6 @@ export async function POST(request: Request) {
                 })
             })
 
-            console.log(uniqueData)
-
             // Check our unique list to see whether our object exists, otherwise add it there
             const uniqueKey = `${searchQuery}-${searchResult}`;
 
