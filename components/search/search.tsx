@@ -76,7 +76,7 @@ export const SearchComponent = () => {
                         <p onClick={handleRelevance} className={relevanceIsSelected ? styles.yearIsSelected : styles.toggleButton}>Relevance</p>
                         <p onClick={handleDate} className={dateIsSelected ? styles.yearIsSelected : styles.toggleButton}>Date</p>
                     </div>
-                    <SearchResultCards searchResults={searchResults} relevancyIsSelected={relevanceIsSelected}/>
+                    <SearchResultCards searchQuery={searchQuery} searchResults={searchResults} relevancyIsSelected={relevanceIsSelected}/>
                 </>
             )}
         </>

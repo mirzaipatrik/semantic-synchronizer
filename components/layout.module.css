@@ -4,3 +4,19 @@
     margin: 3rem auto 6rem;
   }
   
+.feedbackWrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  margin-top: 2rem;
+}
+
+.iconWrapper {
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.iconWrapper:hover svg {
+  transform: scale(1.1);
+  stroke: #000000; /* Change this color to the desired hover stroke color */
+}
