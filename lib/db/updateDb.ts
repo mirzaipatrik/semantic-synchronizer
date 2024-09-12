@@ -65,7 +65,7 @@ export async function update_db({ searchQuery, searchResult, score, postMethod }
 
     } catch (err) {
         console.error("Database operation failed", err);
-        return new Response(JSON.stringify({ status: 500, error: "Internal Server Error" }), { status: 500 });
+        return new Response(JSON.stringify({ status: 500, error: err }), { status: 500 });
     }
 }
 
