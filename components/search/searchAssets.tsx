@@ -45,7 +45,7 @@ export const FeedbackWrapper = ({ searchResult, searchQuery, storyNumber }: Sear
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Post-Methood': "increase"
+                            'Post-Method': "increase"
                         },
                         body: JSON.stringify({
                             searchQuery,
@@ -74,7 +74,7 @@ export const FeedbackWrapper = ({ searchResult, searchQuery, storyNumber }: Sear
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Post-Methood': "decrease"
+                        'Post-Method': "decrease"
                     },
                     body: JSON.stringify({
                         searchQuery,
