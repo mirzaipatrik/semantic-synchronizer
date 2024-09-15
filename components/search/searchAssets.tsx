@@ -34,6 +34,7 @@ export const FeedbackWrapper = ({ searchResult, searchQuery, storyNumber }: Sear
         event.preventDefault();
     };
 
+
     const changeScore = async (change: "increase" | "decrease") => {
         try {
             searchResult.matches.forEach(val => {

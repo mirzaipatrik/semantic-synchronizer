@@ -49,14 +49,27 @@ export async function update_db({ searchQuery, searchResult, score, postMethod }
         const database = client.db("semantic-search");
         const fineTuningEntries = database.collection("fine-tuning");
 
-        const data = await fineTuningEntries.findOne({ sentence1: searchQuery, sentence2: searchResult }) as DbResponse | null;
+        // Normalize the input strings: trim and lowercase
+        const normalizedSearchQuery = searchQuery.trim().toLowerCase();
+        const normalizedSearchResult = searchResult.trim().toLowerCase();
+
+        // Perform a case-insensitive and trimmed search
+        const data = await fineTuningEntries.findOne({
+            sentence1: { $regex: new RegExp(`^${normalizedSearchQuery}$`, 'i') },
+            sentence2: { $regex: new RegExp(`^${normalizedSearchResult}$`, 'i') }
+        }) as DbResponse | null;
+
         const newScore = handleScore(postMethod, data?.score ?? score);
 
         if (data === null) {
-            await fineTuningEntries.insertOne({ sentence1: searchQuery.trim(), sentence2: searchResult.trim(), score: newScore });
+            await fineTuningEntries.insertOne({
+                sentence1: normalizedSearchQuery,
+                sentence2: normalizedSearchResult,
+                score: newScore
+            });
         } else {
             await fineTuningEntries.updateOne(
-                { sentence1: searchQuery.trim(), sentence2: searchResult.trim() },
+                { sentence1: normalizedSearchQuery, sentence2: normalizedSearchResult },
                 { $set: { score: newScore } }
             );
         }
@@ -73,7 +86,6 @@ export async function POST(request: Request) {
     try {
         const { searchQuery, searchResult, score } = await request.json() as DbProps;
         const postMethod = request.headers.get('Post-Method') as "increase" | "decrease";
-        console.log(postMethod);
 
         const response = await update_db({ searchQuery, searchResult, score, postMethod });
         return response;

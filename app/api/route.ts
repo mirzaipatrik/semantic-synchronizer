@@ -30,10 +30,9 @@ export async function POST(request: Request) {
     try {
         const { searchQuery, searchResult, score } = await request.json() as ResponseProps;
         const postMethod = request.headers.get('Post-Method') as "increase" | "decrease";
-        console.log(postMethod);
 
         const response = await update_db({ searchQuery, searchResult, score, postMethod });
-        return response; // Return the response from update_db
+        return response;
 
     } catch (err) {
         console.error("Error in POST handler", err);
