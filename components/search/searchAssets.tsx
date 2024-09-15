@@ -32,10 +32,10 @@ export const FeedbackWrapper = ({ searchResult, searchQuery, storyNumber }: Sear
 
     const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         event.preventDefault();
-
     };
 
-    const increaseScore = async () => {
+
+    const changeScore = async (change: "increase" | "decrease") => {
         try {
             searchResult.matches.forEach(val => {
                 if (val.metadata.storyNumber === storyNumber) {
@@ -45,7 +45,7 @@ export const FeedbackWrapper = ({ searchResult, searchQuery, storyNumber }: Sear
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Post-Methood': "increase"
+                            'Post-Method': change
                         },
                         body: JSON.stringify({
                             searchQuery,
@@ -63,43 +63,16 @@ export const FeedbackWrapper = ({ searchResult, searchQuery, storyNumber }: Sear
         } catch (err) {
             console.error('Error increasing score:', err);
         }
-    };
-
-    const decreaseScore = async () => {
-        searchResult.matches.forEach(val => {
-            if (val.metadata.storyNumber === storyNumber) {
-
-                // Call API to update the feedback
-                fetch('/api', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Post-Methood': "decrease"
-                    },
-                    body: JSON.stringify({
-                        searchQuery,
-                        searchResult: val.metadata.chunkedText,
-                        storyNumber,
-                        score: val.score,
-                    }),
-                })
-                    .then(response => response.json())
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            }
-        });
-    };
-
+    }
 
     return (
         <div
             className={styles.feedbackWrapper}
         >
-            <div onClick={(e) => { handleClick(e); increaseScore(); }}>
+            <div onClick={(e) => { handleClick(e); changeScore("increase"); }}>
                 <ThumbsUpIcon />
             </div>
-            <div onClick={(e) => { handleClick(e); decreaseScore(); }}>
+            <div onClick={(e) => { handleClick(e); changeScore("decrease"); }}>
                 <ThumbsDownIcon />
             </div>
         </div>
